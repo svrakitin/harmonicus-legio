@@ -1,0 +1,45 @@
+diff --git a/Source/Effects/pitchshifter.h b/Source/Effects/pitchshifter.h
+index a921513..7ff2655 100644
+--- a/Source/Effects/pitchshifter.h
++++ b/Source/Effects/pitchshifter.h
+@@ -21,7 +21,7 @@ https://opensource.org/licenses/MIT.
+ /** Shift can be 30-100 ms lets just start with 50 for now.
+ 0.050 * SR = 2400 samples (at 48kHz)
+ */
+-#define SHIFT_BUFFER_SIZE 16384
++#define SHIFT_BUFFER_SIZE 2400
+ //#define SHIFT_BUFFER_SIZE 4800
+ //#define SHIFT_BUFFER_SIZE 8192
+ //#define SHIFT_BUFFER_SIZE 1024
+@@ -176,6 +176,31 @@ class PitchShifter
+         }
+     }
+ 
++    void SetRatio(float ratio)
++    {
++        if(ratio < 1.0f)
++        {
++            shift_up_ = false;
++            ratio = 2 - ratio;
++        }
++        else
++        {
++            shift_up_ = true;
++        }
++
++        mod_freq_ = ((ratio - 1.0f) * sr_) / del_size_;
++        if(mod_freq_ < 0.0f)
++        {
++            mod_freq_ = 0.0f;
++        }
++        phs_[0].SetFreq(mod_freq_);
++        phs_[1].SetFreq(mod_freq_);
++        if(force_recalc_)
++        {
++            force_recalc_ = false;
++        }
++    }
++
+     /** sets delay size changing the timbre of the pitchshifting 
+     */
+     void SetDelSize(uint32_t size)
