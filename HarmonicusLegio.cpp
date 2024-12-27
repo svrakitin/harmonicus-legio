@@ -195,8 +195,7 @@ void ProcessControls() {
     UpdatesideAmplitudes();
   }
 
-  float detuneSpread =
-      fmap(hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP), 0.0f, 1.5f);
+  float detuneSpread = hw.GetKnobValue(DaisyLegio::CONTROL_KNOB_TOP);
   if (detuneSpread != state.detuneSpread) {
     state.detuneSpread = detuneSpread;
     UpdateDetuneRatios();
@@ -216,7 +215,7 @@ float ProcessDetune(float in) {
   for (int i = 0; i < NUM_DETUNED; i++) {
     swarm += detuneShifters[i].Process(in) * state.sideAmplitude;
   }
-  return swarm / (1 + NUM_DETUNED);
+  return swarm;
 }
 
 float ProcessChord(float in) {
